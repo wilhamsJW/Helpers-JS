@@ -1,0 +1,62 @@
+https://github.com/nvm-sh/nvm (Pegar a ultima versão do nodejs aqui)
+
+Primeiro passo: no terminal digite:
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+
+ou 
+
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+
+
+Observação: Verifique se esta é a ultima versão do NVM acessando o Github: https://github.com/nvm-sh/nvm
+
+Passo 2: ainda no terminal rode o comando:
+
+command -v nvm
+
+Feche e reabra o terminal.
+
+Passo 3: Instalando o Node. Rode o comando:
+
+nvm ls-remote
+
+O terminal irá listar todas as versões do node. Escolha a versão e rode o comando:
+
+nvm install XX.XX.X (Exemplo: nvm install 10.16.3)
+
+*** Para instalar o npm ***
+sudo apt install npm
+
+O nvm efetuará o download e instalação da versão escolhida.
+Observação: A grande vantagem de instalar o node via NVM é poder ter na máquina mais. de uma versão do Node. Para alternar entre versões, digite no terminal: nvm use (número da versão).
+Exemplo: nvm use 10.16.1
+
+
+****** Outra forma de instalação *******
+
+# COMO INSTALAR UM VERSÃO EXPECÍFICA NODE NO LINUX
+
+Primeiro, baixe o NVM usando wget. Execute:
+sudo apt install wget
+
+Em seguida utilize o comando:
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+
+O próximo passo é permitir que o NVM seja utilizado do seu perfil de usuário bash com o comando:
+source ~/.profile
+
+Agora você pode usar o NVM para mostrar todas as versões do Node.js disponíveis para ser instaladas. Com o comando:
+nvm ls-remote
+
+Agora você pode escolher a versão que preferir. Execute:
+nvm install 10.15.1
+
+Verifique se a instalação ocorreu com sucesso:
+node -v
+
+Se você instalou o Node.js com este método mas agora deseja desinstalá-lo, primeiro é preciso desativar a aplicação:
+nvm deactivate
+
+Em seguida desinstale o Node.js:
+nvm uninstall v10.15.1
