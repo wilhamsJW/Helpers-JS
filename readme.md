@@ -59,3 +59,5 @@ Cada empresa acima está com seu produto de forma agrupada, dessa forma o usuár
 
 Pasta 13: Conta quantos itens existes de cada tipo diferente em um array, exemplo:
 tenho um array com canetas, lápis e borrachas, o código conta quantos existe.
+
+Pasta 14: Soma valores dentro de um array e valores dentro de um objeto
