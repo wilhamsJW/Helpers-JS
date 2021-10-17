@@ -8,3 +8,4 @@ function formatMoeda (item) {
     var formatado = itemNumber.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     return formatado;
 }
+
