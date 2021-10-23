@@ -14,6 +14,7 @@ Pasta 03: Datas - encontra algumas formas de trabalhar com datas em um sistema w
 1 - Pegar data de amanhâ
 2 - Pegando data específica do passado
 3 - Calcular tempo entre datas
+4 - Formatar data para qualquer formato que vc deseja enviar para uma API
 
 Pasta 04: Filter_e_index - Adicionando um novo item dentro de um array pelo índice
 

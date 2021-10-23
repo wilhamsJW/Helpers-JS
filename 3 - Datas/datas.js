@@ -71,4 +71,4 @@ function daysBetweenDates(inicio, fim) {
 }
 
 
-
+// Formatar data para qualquer formato que vc deseja enviar para uma API
