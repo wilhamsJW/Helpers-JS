@@ -87,7 +87,7 @@ function formatDate(userDate) {
 
 }
 
-console.log('formatDate() = ' + formatDate("12/31/2014"));
+console.log('formatDate() = ' + formatDate("12/31/2014")); // output = formatDate() = 20143112
 
 // Também podemos usar a lib moment
 /*
