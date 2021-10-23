@@ -72,3 +72,36 @@ function daysBetweenDates(inicio, fim) {
 
 
 // Formatar data para qualquer formato que vc deseja enviar para uma API
+
+
+function formatDate(userDate) {
+
+    var dia = userDate.split("/")[0]; // [0] -> posição sendo acessada na qual eu quero pegar dia, mes ou ano, método split() separa as strings pela '/' ou qq outro parametro
+    var mes = userDate.split("/")[1];
+    var ano = userDate.split("/")[2];
+
+    //   Podemos fazer com slice para ter uma garantis q só irá pegar os dois últimos caracteres da string nos dando uma segurança a mais
+    //   ou podemos apenas colocar ano + mes + dia
+    //   return ano + ("0"+mes).slice(-2) + ("0"+dia).slice(-2);
+    return ano + mes + dia;
+
+}
+
+console.log('formatDate() = ' + formatDate("12/31/2014"));
+
+// Também podemos usar a lib moment
+/*
+Você deve informar para o moment 
+o formato de entrada, ou seja, como está 
+a string com sua data antes de 
+formatá-la pois internamente ele
+fará um parse e chamará um new Date().
+
+Fonte: http://momentjs.com/docs/#/parsing/string/
+*/
+{/* <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"></script> */}
+
+var data = moment("02/03/2018", "DD/MM/YYYY");
+
+//Feito isso basta definir o formato de saída:
+console.log(data.format("YYYY-MM-DD"));
