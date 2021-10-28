@@ -64,3 +64,8 @@ tenho um array com canetas, lápis e borrachas, o código conta quantos existe.
 Pasta 14: Soma valores dentro de um array e valores dentro de um objeto
 
 Pasta 15: Mostrar o índice do item clikado
+
+Pasta 16: Resolvendo problema global clássico do Javascript (lógica de array1s)
+foi usado indexOf(), push(), apply e cáculo com Math.min (Dentro do arquivo
+encontramos a descrição do problema que eu fiz e o código do stackOverFlow)
+https://stackoverflow.com/questions/44732552/speeding-up-this-code-for-codefighters-javascript-firstduplicate-function
