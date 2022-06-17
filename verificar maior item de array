@@ -1,0 +1,4 @@
+var meuArray= [0,12,13,2,1273,28,1];
+var maior = Math.max.apply(null, meuArray );
+
+//https://pt.stackoverflow.com/questions/35202/como-saber-o-maior-valor-de-um-array
