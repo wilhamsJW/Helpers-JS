@@ -105,3 +105,15 @@ var data = moment("02/03/2018", "DD/MM/YYYY");
 
 //Feito isso basta definir o formato de saída:
 console.log(data.format("YYYY-MM-DD"));
+
+// Manipulando data com replace e regex
+
+var dat = "1999-09-28"
+
+var reg = /(\d{4})-(\d{2})-(\d{2})/
+
+var result = dat.replace(/(\d{4})-(\d{2})-(\d{2})/, "$2.$3.$1.")
+
+console.log("result:", result)
+
+// A saída será: "09.28.1999." em formato DD/MM/AAAA
