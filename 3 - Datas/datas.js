@@ -112,8 +112,8 @@ var dat = "1999-09-28"
 
 var reg = /(\d{4})-(\d{2})-(\d{2})/
 
-var result = dat.replace(/(\d{4})-(\d{2})-(\d{2})/, "$2.$3.$1.")
+var result = dat.replace(/(\d{4})-(\d{2})-(\d{2})/, "$2/$3/$1")
 
 console.log("result:", result)
 
-// A saída será: "09.28.1999." em formato DD/MM/AAAA
+// A saída será: "09/28/1999" em formato DD/MM/AAAA
