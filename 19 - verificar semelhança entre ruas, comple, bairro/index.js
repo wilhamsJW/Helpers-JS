@@ -1,6 +1,6 @@
 function main() {
   
-  const ruaCrname  = 'R FRANCISCO RODRIGUES SERRALHA 350 AP 204 BLOCO 33 CHACARAS TUBALINA E QUARTEL'
+  const ruaCrname  = 'Praca Benicio do Espirito Santo'
     
   //   let ruaClientWit = 'RUA FRANCISCO RODRIGUES'
   //   let complementOptions = 'BLOCO' 
@@ -10,7 +10,7 @@ function main() {
   //   let maiorSimilaridade = 0
   //   let notEnterNumber = false    
     
-    let ruaClientWit = 'RUA nada a ver rodrigues'
+    let ruaClientWit = 'RUA Espirito santo'
     let complementOptions = 'casa' 
     let numero = '455'
     let similaridade = 0
@@ -32,7 +32,10 @@ function main() {
       //console.log('ruaCrname', formatRua(ruaCrname).split(' '))
   
       for (const palavraRua of palavrasRuaClientWit) {
-          if (ruaCrname.includes(palavraRua)) { // Verifica se existe palavras da rua do cliente do wit dentro da rua do crName
+        console.log('palavraRua Cliente:', palavraRua)
+        console.log('ruaCrname:', formatRua(ruaCrname))
+
+          if (formatRua(ruaCrname).includes(palavraRua)) { // Verifica se existe palavras da rua do cliente do wit dentro da rua do crName
             similaridade ++
             //console.log("palavraRua igual - cliente", palavraRua)
             console.log("1 similaridade", similaridade)
@@ -75,17 +78,28 @@ function main() {
     }
 
     verificaRuaSimilar(ruaCrname)
-    console.log('ultimo - maiorSimilaridade', maiorSimilaridade)
     
     if (maiorSimilaridade <= 1) {
-        console.log('maiorSimilaridade', maiorSimilaridade)
-        return 'NOVA VENDA'
+        //console.log('maiorSimilaridade', maiorSimilaridade)
+        //return 'NOVA VENDA'
     }
-    
+
+    const ruaCrnameLength = ruaCrname.split(' ').length
+    //const proximidade = (Math.abs(maiorSimilaridade - ruaCrnameLength) / maiorSimilaridade) * 10
+    const diferencaEntreRua = Math.abs(maiorSimilaridade - ruaCrnameLength)
+    const porcentagemDistancia = (diferencaEntreRua / Math.max(maiorSimilaridade, ruaCrnameLength)) * 100;
+
+
+    if (porcentagemDistancia < 40) {
+      console.log('clikooooooooooo neleeeeeee')
+    }
+
+
     return {
-      lengthRuaCrName: ruaCrname.split(' ').length,
+      lengthRuaCrName: ruaCrnameLength,
       palavrasParecidasEntreAsRuas: maiorSimilaridade,
-      diferencaEntreRuas: Math.abs(maiorSimilaridade - ruaCrname.split(' ').length) 
+      diferencaEntreRuas: diferencaEntreRua,
+      porcentagemDistancia: porcentagemDistancia.toFixed(0) == '0' ? 'Exatamente iguais' : porcentagemDistancia.toFixed(0)
     };
 }
       
