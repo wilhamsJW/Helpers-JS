@@ -1,0 +1,121 @@
+function compareRuas(ruaCrname, ruaClientWit) {
+  
+    //const ruaCrname  = 'r lenira maria dos santos reis'
+    //const ruaClientWit = 'Rua Lenira Maria dos Santos Reis'
+    let similaridade = 0
+    let maiorSimilaridade = 0
+
+function formatRua(str) {
+  const palavrasASeremRemovidas = ['rua', 'avenida', 'alameda', 'av.', 'travessa', 'av'];
+  const regex = new RegExp(palavrasASeremRemovidas.join('|'), 'gi');
+
+  const processedStr = str
+    .replace(regex, '')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/^r\s+/i, '')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+
+  return processedStr;
+}
+
+    
+    const verificaRuaSimilar = (ruaCrname) => {
+      const palavrasRuaClientWit = formatRua(ruaClientWit).split(" ")
+
+      //console.log('formatRua(ruaCrname)', formatRua(ruaCrname))
+      //console.log('formatRua(ruaClientWit)', formatRua(ruaClientWit))
+  
+      for (const palavraRua of palavrasRuaClientWit) {
+        //console.log('palavraRua Cliente:', palavraRua)
+        //console.log('ruaCrname:', formatRua(ruaCrname))
+
+          if (formatRua(ruaCrname).includes(palavraRua)) { // Verifica se existe palavras da rua do cliente do wit dentro da rua do crName
+            similaridade ++
+            console.log("palavraRua igual - cliente:", palavraRua)
+            console.log("ruaCrname.:", ruaCrname)
+            console.log("1 similaridade - rua igual:", similaridade)
+          }
+  
+        if (similaridade > maiorSimilaridade) {
+          maiorSimilaridade = similaridade
+        }
+  
+      } // end for main
+    }
+
+    verificaRuaSimilar(ruaCrname)
+    
+    if (maiorSimilaridade <= 1) {
+        //console.log('maiorSimilaridade', maiorSimilaridade)
+        //return 'NOVA VENDA'
+    }
+
+    const ruaCrnameLength = formatRua(ruaCrname).split(' ').length
+    const diferencaEntreRua = Math.abs(maiorSimilaridade - ruaCrnameLength)
+    const porcentagemDistanciaProximidade = (diferencaEntreRua / Math.max(maiorSimilaridade, ruaCrnameLength)) * 100;
+
+    console.log('maiorSimilaridade:',maiorSimilaridade)
+    // Se for menor que 40 indica que esta é a rua igual
+    if (porcentagemDistanciaProximidade < 40) {
+      console.log('cliko nele ou seleciono ele')
+    }
+
+    return {
+      lengthRuaCrName: ruaCrnameLength,
+      palavrasParecidasEntreAsRuas: maiorSimilaridade,
+      diferencaEntreRuas: diferencaEntreRua,
+      porcentagemDistanciaProximidade: porcentagemDistanciaProximidade.toFixed(0) == '0' ? 'Exatamente iguais' : porcentagemDistanciaProximidade.toFixed(0)
+    };
+}
+
+function main(){
+    //const ulElements = document.querySelectorAll('ul[aria-hidden="false"] li')
+    const ulElements = [
+        { textContent: 'Rua das Amélís' },
+        { textContent: 'Rua dos Cravos' },
+        { textContent: 'Avenida das Margaridas' },
+        { textContent: 'Rua das Violetas' },
+        { textContent: 'R das Violetas' },
+        { textContent: 'Rua dos Lírios' },
+        { textContent: 'Avenida das Rosas' },
+        { textContent: 'Rua das Tulipas' },
+        { textContent: 'Avenida dos Girassóis' },
+        { textContent: 'Rua das Orquídeas' },
+        { textContent: 'Rua das Camélias' },
+        { textContent: 'Praça espirito sánto' },
+        { textContent: 'Rua espirito sánto' }
+      ];
+    let guardDiferenceRuas = []
+  
+    for (let i = 0; i < ulElements.length; i++) {
+      //ulElement.click()
+      const result = compareRuas(ulElements[i].textContent, 'Rua espirito santó')
+      guardDiferenceRuas.push({
+        diferencaEntreRuas: result.diferencaEntreRuas,
+        indice: i,
+        ruaCrm: ulElements[i].textContent,
+        porcentagemDistanciaProximidade: result.porcentagemDistanciaProximidade,
+        palavrasParecidasEntreAsRuas: result.palavrasParecidasEntreAsRuas,
+      })
+    }
+
+    function encontrarMenorDiferenca(objetos) {
+        return objetos.reduce((menor, objeto) => {
+          return objeto.diferencaEntreRuas < menor.diferencaEntreRuas ? objeto : menor;
+        });
+      }
+      
+      const menorDiferenca = encontrarMenorDiferenca(guardDiferenceRuas);
+      console.log('menorDiferenca:', encontrarMenorDiferenca(guardDiferenceRuas));
+      // depois de achar a menorDiferenca use ele pra dá o click
+      // ex: ulElements[`menorDiferenca`].click()
+      
+      
+    console.log('guardDiferenceRuas', guardDiferenceRuas)
+}
+        
+console.log('MAIN', main())
