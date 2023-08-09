@@ -1,0 +1,43 @@
+// o código verifica a quantidade de letras iguais numa string ou em uma palvras, ele é mais preciso em um usar palavra por palvara do que em uma string inteira
+
+function calcularSimilaridade(ruaOne, ruaTwo) {
+    if (typeof ruaOne !== 'string' || typeof ruaTwo !== 'string') {
+      if (!ruaOne?.length || !ruaTwo?.length) {
+        return 'Nome de comparação veio vazio.'
+      }
+      return 'As entradas devem ser strings.';
+    }
+  
+    const contarLetras = (palavra) => {
+      const letras = {};
+      for (const letra of palavra) {
+        letras[letra] = (letras[letra] || 0) + 1;
+      }
+      return letras;
+    };
+  
+    const letrasruaOne = contarLetras(ruaOne);
+    const letrasruaTwo = contarLetras(ruaTwo);
+  
+    const totalLetrasParecidas = Object.keys(letrasruaOne).reduce((total, letra) => {
+      if (letrasruaTwo[letra]) {
+        total += Math.min(letrasruaOne[letra], letrasruaTwo[letra]);
+      }
+      return total;
+    }, 0);
+  
+    const maxComprimento = Math.max(ruaOne.length, ruaTwo.length);
+  
+    return {
+      porcentagem: (totalLetrasParecidas / maxComprimento) * 100,
+      tamanho: maxComprimento,
+      letrasParecidas: totalLetrasParecidas,
+      diferencaComprimentoLetrasParecidas: maxComprimento - totalLetrasParecidas
+    };
+  }
+  
+  const ruaOne = "espirito";
+  const ruaTwo = "espriito";
+  const resultado = calcularSimilaridade(ruaOne, ruaTwo);
+  
+  console.log("Resultado:", resultado);
