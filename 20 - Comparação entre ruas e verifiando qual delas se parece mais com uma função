@@ -1,4 +1,4 @@
-// Valida qtd de letras iguais e se as letras foram trocadas, ex.: graça e garca, as letras são iguais e apenas foram alteradas e devem retornar com porcentagem de 100%
+// gitihub// Valida qtd de letras iguais e se as letras foram trocadas, ex.: graça e garca, as letras são iguais e apenas foram alteradas e devem retornar com porcentagem de 100%
 function calcularSimilaridadeByLetra(ruaOne, ruaTwo) {
   if (typeof ruaOne !== "string" || typeof ruaTwo !== "string") {
     if (!ruaOne?.length || !ruaTwo?.length) {
@@ -196,7 +196,8 @@ function main() {
       porcentagemDistanciaProximidade: result.porcentagemDistanciaProximidade, // quanto mais perto de 100 ou passando de 100 a rua é diferente, menor que 40 a rua é bem parecida
       palavrasParecidasEntreAsRuas: result.palavrasParecidasEntreAsRuas,
       lengthRuaCrName: result.lengthRuaCrName,
-      lengthRuaClientWit: result.lengthRuaClientWit
+      lengthRuaClientWit: result.lengthRuaClientWit,
+      element: ulElements[i]
     });
   }
 
@@ -212,7 +213,8 @@ function main() {
             diferencaComprimentoLetrasParecidas:  result.diferencaComprimentoLetrasParecidas,
             indice: ruaCrmOrClient.indice,
             ruaCrm: ruaCrmOrClient.ruaCrm,
-            ruaClient: ruaCrmOrClient.ruaClient
+            ruaClient: ruaCrmOrClient.ruaClient,
+            element: ruaCrmOrClient.element // elemento atual caso precise dá um clik ou outra coisa nele
         })
     }
   }
@@ -221,10 +223,15 @@ function main() {
 
   console.log('ruaMaisParecidaPossivel:', ruaMaisParecidaPossivel);
   console.log("guardDiferenceRuas", guardDiferenceRuas);
-  // retorna a rua que tiver com menor diferença entre ambas as strings
-  return ruaMaisParecidaPossivel.reduce((menor, el) => {
-    return el.porcentagem > menor.porcentagem ? el : menor;
+  const ruaMaisParecidaPossivelFinish =  ruaMaisParecidaPossivel.reduce((menor, el) => {
+      return el.porcentagem > menor.porcentagem ? el : menor;
   });
+
+  if (Object.keys(ruaMaisParecidaPossivelFinish).length) {
+    return ruaMaisParecidaPossivelFinish
+      //return ruaMaisParecidaPossivelFinish.element.click() // quando for um elemento html conseguiremos dá o click, mas aqui é só um obejto
+  }
+  return 'Não foi encontrado a rua'
 }
 
 console.log("A rua mais parecida é:", main());
