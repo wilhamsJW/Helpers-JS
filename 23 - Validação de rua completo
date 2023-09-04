@@ -1,0 +1,341 @@
+// Valida qtd de letras iguais e se as letras foram trocadas, ex.: graça e garca, as letras são iguais e 
+// apenas foram alteradas e devem retornar com porcentagem de 100%
+function calcularSimilaridadeByLetra(ruaOne, ruaTwo) {
+  if (typeof ruaOne !== "string" || typeof ruaTwo !== "string") {
+    if (!ruaOne?.length || !ruaTwo?.length) {
+      return "Nome de comparação não pode ser vazio.";
+    }
+    return "As entradas devem ser strings.";
+  }
+
+  const contarLetras = (palavra) => {
+    const letras = {};
+    for (const letra of palavra) {
+      letras[letra] = (letras[letra] || 0) + 1;
+    }
+    return letras;
+  };
+
+  const letrasruaOne = contarLetras(ruaOne);
+  const letrasruaTwo = contarLetras(ruaTwo);
+
+  const totalLetrasParecidas = Object.keys(letrasruaOne).reduce(
+    (total, letra) => {
+      if (letrasruaTwo[letra]) {
+        total += Math.min(letrasruaOne[letra], letrasruaTwo[letra]);
+      }
+      return total;
+    },
+    0
+  );
+
+  const maxComprimento = Math.max(ruaOne.length, ruaTwo.length);
+  const resultPorcetagem = (totalLetrasParecidas / maxComprimento) * 100;
+
+  return {
+    porcentagem: Math.floor(resultPorcetagem),
+    tamanho: maxComprimento,
+    letrasParecidas: totalLetrasParecidas,
+    qtdLetrasDiferentesEntreStrings: maxComprimento - totalLetrasParecidas,
+  };
+}
+
+function formatRua(str) {
+  const palavrasASeremRemovidas = [
+    "rua",
+    "avenida",
+    "alameda",
+    "av.",
+    "travessa",
+    "av",
+    "estrada"
+  ];
+  const regex = new RegExp(palavrasASeremRemovidas.join("|"), "gi");
+
+  return str
+    .replace(regex, "")
+    .replace(/\s{2,}/g, " ")
+    .replace(/^r\s+/i, "")
+    .toUpperCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\([^)]*\)/g, '') // remove parenteses e tudo q está dentro dele
+    .replace(/^(da|de|di|do|du|das|des|dos)\s+/i, '') // remove essas preposições apenas no incicio da string
+    .trim()
+}
+
+function compareRuas(ruaCrname, ruaClientWit) {
+
+  let similaridade = 0;
+  let palavrasExatamenteIguais = 0;
+  let maiorSimilaridade = 0;
+
+  const verificaRuaSimilar = (ruaCrname) => {
+    const palavrasRuaClientWit = formatRua(ruaClientWit).split(" ");
+
+    for (const palavraRua of palavrasRuaClientWit) {
+      const splitRuaCrname = formatRua(ruaCrname).split(" ");
+
+        if (formatRua(ruaCrname).includes(palavraRua)) {
+          palavrasExatamenteIguais++;
+        }
+
+      for (const palavraRuaCrm of splitRuaCrname) {
+        if (!palavraRuaCrm.length || !palavraRua.length) {
+          continue;
+        }
+        let qtdLetrasParecidas = calcularSimilaridadeByLetra(
+          palavraRuaCrm,
+          palavraRua
+        );
+
+        // Verifica se existe palavras da rua do cliente do wit dentro da rua do crName e verifica a qtd de letras 
+        // parecidas para garantir que mesmo que o usuário digite a letras trocadas o código identifique isso
+        if (
+          qtdLetrasParecidas.porcentagem >= 80 ||
+          formatRua(ruaCrname).includes(palavraRua)
+        ) {
+          similaridade++;
+        }
+
+        if (similaridade > maiorSimilaridade) {
+          maiorSimilaridade = similaridade;
+        }
+      }
+    } // end for main
+  };
+
+  verificaRuaSimilar(ruaCrname);
+
+  const ruaCrnameLength = ruaCrname.split(" ").length; // 3
+  const ruaClientWitLength = ruaClientWit.split(" ").length; // 4
+  const diferencaEntreRua = Math.abs(maiorSimilaridade - ruaCrnameLength);
+  const porcentagemDistanciaProximidade =
+    (diferencaEntreRua / Math.max(maiorSimilaridade, ruaCrnameLength)) * 100;
+
+  return {
+    lengthRuaCrName: ruaCrnameLength,
+    lengthRuaClientWit: ruaClientWitLength,
+    palavrasParecidasEntreAsRuas: maiorSimilaridade,
+    diferencaEntreRuas: diferencaEntreRua,
+    palvrasExatamenteIguaisS: palavrasExatamenteIguais,
+    porcentagemDistanciaProximidade:
+      porcentagemDistanciaProximidade.toFixed(0) == "0"
+        ? "Exatamente iguais"
+        : porcentagemDistanciaProximidade.toFixed(0),
+  };
+}
+
+function substituirNumeros(texto) {
+    const numerosExtenso = {
+      0: "zero",
+      1: "um",
+      2: "dois",
+      3: "três",
+      4: "quatro",
+      5: "cinco",
+      6: "seis",
+      7: "sete",
+      8: "oito",
+      9: "nove",
+    };
+  
+  
+    let textoModificado = "";
+    for (const caractere of texto) {
+        textoModificado += numerosExtenso[caractere] || caractere;
+    }
+  
+  const romanNumerals = {
+    'I': 1,
+    'II': 2,
+    'III': 3,
+    'IV': 4,
+    'V': 5,
+    'VI': 6,
+    'VII': 7,
+    'VIII': 8,
+    'IX': 9,
+    'X': 10
+  };
+
+  return texto.replace(/\b(II?I{0,3}|IV|VI{0,3}|IX|X)\b/g, match => {
+    return romanNumerals[match] || match;
+  });
+}
+
+function calcularQtdPalavrasIguais(ruaCrm, ruaClient) {
+    const palavrasRuaCrm = ruaCrm.split(/\s+/);
+    const palavrasRuaCliente = ruaClient.split(/\s+/);
+    const palavrasUnicasCrm = new Set(palavrasRuaCrm);
+    const palavrasUnicasCliente = new Set(palavrasRuaCliente);
+
+    const palavrasIguais = new Set([...palavrasUnicasCrm].filter(palvraClient => palavrasUnicasCliente.has(palvraClient)))
+
+    const size = new Set([...palavrasUnicasCrm].filter(palvraClient => palavrasUnicasCliente.has(palvraClient)))
+
+    const diferenca = Math.abs(palavrasRuaCliente.length - palavrasIguais.size)
+
+    const result = Math.abs(size.size - diferenca)
+
+    return {
+      palavrasIguais: new Set([...palavrasUnicasCrm].filter(palvraClient => palavrasUnicasCliente.has(palvraClient))).size,
+      diferenca: Math.abs(palavrasRuaCliente.length - palavrasIguais.size),
+      resultA: result,
+      palavrasRuaClienteLength: palavrasRuaCliente.length,
+      palavrasRuaCrmLength: palavrasRuaCrm.length,
+      palavrasRuaCrmA: palavrasRuaCrm,
+      palavrasRuaClienteA: palavrasRuaCliente
+    }
+}
+
+function main() {
+  const ulElements = document.querySelectorAll('ul[aria-hidden="false"] li')
+
+  if (!ulElements.length) {
+    if ({{terceiraPesquisaRua}}) {
+      return 'quartaPesquisaRua'
+    }
+    if ({{quartaPesquisaRua}}) {
+      return 'Excedido tentativas de pesquisa de rua'
+    }
+    return "Array não existe";
+  }
+
+  let guardDiferenceRuas = []
+  for (let i = 0; i < ulElements.length; i++) {
+    const result = compareRuas(
+      substituirNumeros(ulElements[i].textContent),
+      substituirNumeros({{deliveryAddress.street}})
+    );
+    guardDiferenceRuas.push({
+      element: ulElements[i],
+      diferencaEntreRuas: result.diferencaEntreRuas,
+      indice: i,
+      ruaCrm: formatRua(substituirNumeros(ulElements[i].textContent)),
+      ruaClient: formatRua(substituirNumeros({{deliveryAddress.street}})),
+      porcentagemDistanciaProximidade: result.porcentagemDistanciaProximidade, // quanto mais perto de 100 ou passando de 100 a rua é diferente, menor que 40 a rua é bem parecida
+      palavrasParecidasEntreAsRuas: result.palavrasParecidasEntreAsRuas,
+      lengthRuaCrName: result.lengthRuaCrName,
+      lengthRuaClientWit: result.lengthRuaClientWit,
+      palvrasExatamenteIguais: result.palvrasExatamenteIguaisS
+    });
+  }
+
+  // Faz a verificação final validando qual rua mais parecida das ruas mais parecidas que foi guardado no array guardDiferenceRuas
+  let ruaMaisParecidaPossivel = []
+  function getRuaMaisParecida(guardDiferenceRuas) {
+    for (const ruaCrmOrClient of guardDiferenceRuas) {
+        const result = calcularSimilaridadeByLetra(ruaCrmOrClient.ruaCrm, ruaCrmOrClient.ruaClient)
+        const resultAux = calcularQtdPalavrasIguais(ruaCrmOrClient.ruaCrm, ruaCrmOrClient.ruaClient)
+        ruaMaisParecidaPossivel.push({
+            porcentagem: result.porcentagem,
+            tamanho: result.tamanho,
+            letrasParecidas: result.letrasParecidas,
+            qtdLetrasDiferentesEntreStrings: result.qtdLetrasDiferentesEntreStrings,
+            indice: ruaCrmOrClient.indice,
+            ruaCrm: ruaCrmOrClient.ruaCrm.replace(/\d+/g, ''),
+            ruaClient: ruaCrmOrClient.ruaClient.replace(/\d+/g, ''),
+            element: ruaCrmOrClient.element,
+            palavrasParecidasEntreAsRuas: ruaCrmOrClient.palavrasParecidasEntreAsRuas,
+            palvrasExatamenteIguais: resultAux
+        })
+    }
+  }
+
+      function veirifcaQuantasPalavrasIguaisTem(ruaMaisParecidaPossivel) {
+        console.log('veirifcaQuantasPalavrasIguaisTem', ruaMaisParecidaPossivel)
+        for (const value of ruaMaisParecidaPossivel) {
+
+          // Uma verificação para selecionar rua mais parecida acima de 90%
+          if (value.porcentagem > 90) {
+            return {
+              msg: 'Escolhido rua com mais de 90%',
+              ruaMaisParecidaPossivel: value
+            }
+          }
+
+          const bairroClientWords = value.ruaClient.trim().replace(/\d+/g, '').split(' ');
+          const bairroCrmWords = value.ruaCrm.trim().replace(/\d+/g, '').split(' ');
+      
+          let palavrasIguais = 0;
+      
+          for (const word of bairroClientWords) {
+            if (bairroCrmWords.includes(word)) {
+              palavrasIguais++;
+            }
+          }
+      
+          value.palavrasIguais = palavrasIguais;
+        }
+      
+        return ruaMaisParecidaPossivel;
+      }
+
+    getRuaMaisParecida(guardDiferenceRuas)
+    const veirifcaQuantasPalavrasIguaisTemAux = veirifcaQuantasPalavrasIguaisTem(ruaMaisParecidaPossivel)
+
+    if (veirifcaQuantasPalavrasIguaisTemAux.msg) {
+      veirifcaQuantasPalavrasIguaisTemAux.ruaMaisParecidaPossivel.element.click()
+      return veirifcaQuantasPalavrasIguaisTemAux
+    }
+
+    // Isso é uma regra que atende alguns tickets - NÂO APAGUE
+    const ruaMaisParecidaPossivelFinish =  ruaMaisParecidaPossivel.reduce((menor, el) => {
+        return el.porcentagem > menor.porcentagem && el.letrasParecidas > menor.letrasParecidas ? el : menor;
+    });
+
+    // Este log da a visão geral sobre o motivo do código não ter selecionado a rua correta
+    console.log('ruaMaisParecidaPossivelFinish-ONE:',ruaMaisParecidaPossivelFinish) // exibe a rua mais semelhante de todas
+    console.log('ruaMaisParecidaPossivel-ONE:',ruaMaisParecidaPossivel) // exibe todas as ruas seleciondas mais parecidas
+
+    // Isso é uma regra que atende alguns tickets - NÂO APAGUE
+    const permitidoPassar = ruaMaisParecidaPossivelFinish.palvrasExatamenteIguais.palavrasIguais == 
+      ruaMaisParecidaPossivelFinish.palvrasExatamenteIguais.palavrasRuaCrmLength
+
+    // Isso é uma regra que atende alguns tickets - NÂO APAGUE  
+    const validPalavrasIguaisAndSeleciona =  ruaMaisParecidaPossivel.filter((el) => {
+      console.log('el.palvrasExatamenteIguais.palavrasRuaCrmLength', el.palvrasExatamenteIguais.palavrasRuaCrmLength);
+      return el.palvrasExatamenteIguais.palavrasRuaCrmLength == el.palvrasExatamenteIguais.palavrasIguais
+    });
+
+    console.log('validPalavrasIguaisAndSeleciona:', validPalavrasIguaisAndSeleciona);
+
+    if (validPalavrasIguaisAndSeleciona) {
+      validPalavrasIguaisAndSeleciona[0].element.click()
+      return {
+        msg: 'Selecionado por palavras iguais',
+        validPalavrasIguaisAndSeleciona
+      }
+    }
+
+    if (
+      Object.keys(ruaMaisParecidaPossivelFinish).length && 
+      ruaMaisParecidaPossivelFinish.porcentagem > 70 && 
+      ruaMaisParecidaPossivelFinish.qtdLetrasDiferentesEntreStrings < 8 ||
+      //ruaMaisParecidaPossivelFinish.palvrasExatamenteIguais >= 4 &&
+      ruaMaisParecidaPossivelFinish.palvrasExatamenteIguais.diferenca < 4 &&
+      ruaMaisParecidaPossivelFinish.palvrasExatamenteIguais.palavrasIguais > 1 ||
+      permitidoPassar
+    ) {
+
+      console.log('nem caiu aqui')
+
+      if (
+          !permitidoPassar &&
+          ruaMaisParecidaPossivelFinish.palvrasExatamenteIguais.palavrasRuaCrmLength <= 3 && 
+          ruaMaisParecidaPossivelFinish.palvrasExatamenteIguais.diferenca <= 2
+        ) {
+            return 'Diferença muito grande para o tamanho da rua'
+        }
+
+        ruaMaisParecidaPossivelFinish.element.click()
+        return {
+          msg: 'Selecionado RUA',
+          ruaMaisParecidaPossivelFinish
+        }
+    }
+    return 'Não foi encontrado a rua'
+}
+
+return main()
